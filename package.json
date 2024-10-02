@@ -4,6 +4,8 @@
   "description": "Backend for Site Scout",
   "main": "dist/index.js",
   "scripts": {
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
@@ -11,18 +13,24 @@
     "test": "jest"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.33.0",
     "express": "^4.17.1",
     "husky": "4",
     "morgan": "^1.10.0",
+    "pg": "^8.13.0",
     "puppeteer": "^23.4.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.13",
     "@types/morgan": "^1.9.3",
     "@types/node": "^16.11.12",
+    "@types/pg": "^8.11.10",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
+    "drizzle-kit": "^0.24.2",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
