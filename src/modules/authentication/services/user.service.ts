@@ -1,4 +1,5 @@
 import UserRepository from '../dal/user.repository';
+import { LoginUserPayload } from '../entities/user.entity';
 import { InsertUser } from '../models';
 import bcrypt from 'bcrypt';
 
@@ -23,6 +24,31 @@ class UserService {
 
       const createdUser = await userRepository.createUser({ ...data, password: hashedPassword });
       return createdUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async loginUser(data: LoginUserPayload) {
+    const { email, password } = data;
+    const userRepository = new UserRepository();
+
+    try {
+      const [user] = await userRepository.getUserByEmail(email);
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      const userPassword = user.password;
+      const isPasswordValid = await bcrypt.compare(password, userPassword);
+
+      if (!isPasswordValid) {
+        throw new Error('Invalid password');
+      }
+
+      const { password: _, ...userWithoutPasswordField } = user;
+      return userWithoutPasswordField;
     } catch (error) {
       throw error;
     }
