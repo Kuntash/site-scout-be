@@ -1,4 +1,5 @@
 #!/bin/sh
 
 # Run lint and prettier before commit
+pnpm prettier
 npx lint-staged

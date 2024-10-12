@@ -27,6 +27,21 @@ class UserController {
       }
 
       const createdUser = await userService.createUser(req.body as Omit<InsertUser, 'id'>);
+
+      /* generate jwt token */
+      const jwtPayload: AuthJWTPayload = {
+        userId: createdUser?.id,
+      };
+      const token = jwt.sign(jwtPayload, process.env.JWT_SECRET_KEY as string, { expiresIn: process.env.JWT_EXPIRY });
+
+      /* set http cookie */
+      res.cookie(process.env.JWT_TOKEN_NAME as string, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: Number(process.env.AUTH_TOKEN_COOKIE_EXPIRY),
+        sameSite: 'none',
+      });
+
       return res.status(201).json({ message: 'User successfully created', data: createdUser });
     } catch (error) {
       console.error('Error creating user', error);
@@ -77,6 +92,19 @@ class UserController {
     } catch (error) {
       console.error('Error logging in user', error);
       return res.status(400).json({ message: 'Error logging in user' });
+    }
+  }
+
+  async getCurrentUser(req: Request, res: Response) {
+    const userService = new UserService();
+
+    try {
+      if (!req?.userId) return res.status(401).json({ message: 'No current user found' });
+
+      const currentUser = await userService.getUserById(req?.userId);
+      res.status(200).json({ message: 'Current user successfully fetched', data: { currentUser } });
+    } catch (error) {
+      console.error('Not able to fetch current user', error);
     }
   }
 }

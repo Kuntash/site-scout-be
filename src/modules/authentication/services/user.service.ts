@@ -53,6 +53,19 @@ class UserService {
       throw error;
     }
   }
+
+  async getUserById(id: string) {
+    const userRepository = new UserRepository();
+    try {
+      const user = await userRepository.getUserById(id);
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default UserService;

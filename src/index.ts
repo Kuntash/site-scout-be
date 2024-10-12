@@ -3,6 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import RootRouter from './routes';
+import cors from 'cors';
 
 /* load env */
 dotenv.config();
@@ -15,6 +16,15 @@ const port = process.env.PORT || 3000;
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+const corsOptions = {
+  origin: process.env.ALLOWED_ORIGIN,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 

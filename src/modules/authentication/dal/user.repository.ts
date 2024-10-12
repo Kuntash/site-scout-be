@@ -12,6 +12,12 @@ class UserRepository {
   async getUserByEmail(email: string) {
     return await db.select().from(usersTable).where(eq(usersTable.email, email)).limit(1);
   }
+
+  async getUserById(id: string) {
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, id));
+    const { password, ...userWithoutPassword } = user ?? {};
+    return userWithoutPassword;
+  }
 }
 
 export default UserRepository;
